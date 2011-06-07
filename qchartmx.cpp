@@ -727,7 +727,7 @@ QChartMX::Signal::Signal(QWidget* parent) :
     sig(new QComboBox(parent)),
     val(new QLabel(parent)),
     tableItem(new QTableWidgetItem()),
-    pv(new QEpicsPV(this)),
+    pv(new QEpicsPv(this)),
     curve(new QwtPlotCurve),
     pen(),
     min(NAN), max(NAN),

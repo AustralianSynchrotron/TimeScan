@@ -19,7 +19,7 @@
 
 #include "ui_qchartmx.h"
 
-#include <qepicspv.h>
+#include <qtpv.h>
 #include <qwt_plot_curve.h>
 #include <qwt_plot_grid.h>
 
@@ -138,7 +138,7 @@ public:
   QComboBox * sig;
   QLabel * val;
   QTableWidgetItem * tableItem;
-  QEpicsPV * pv;
+  QEpicsPv * pv;
   QwtPlotCurve * curve;
   QPen pen;
   Line data;
