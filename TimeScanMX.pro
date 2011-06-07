@@ -20,7 +20,7 @@ HEADERS  += qchartmx.h
 
 FORMS    += qchartmx.ui
 
-LIBS += -lqwt -lqepicspv -lblitz -lpoptmx
+LIBS += -lqwt -lqtpv -lblitz -lpoptmx
 
 target.files = $$[TARGET]
 target.path = $$[INSTALLBASE]/bin
