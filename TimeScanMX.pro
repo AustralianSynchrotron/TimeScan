@@ -13,6 +13,7 @@ SOURCES += main.cpp\
         qchartmx.cpp
 
 INCLUDEPATH += /usr/include/qwt5/ \
+	/usr/local/include/qwt5 \
 	/usr/include/qwt-qt4/
 
 

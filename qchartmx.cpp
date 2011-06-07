@@ -10,6 +10,7 @@
 
 #include <qwt_scale_draw.h>
 #include <qwt_scale_engine.h>
+#include <qwt_symbol.h>
 
 
 clargs::clargs(int argc, char *argv[]) :
@@ -384,6 +385,10 @@ void QChartMX::addSignal(const QString & pvName){
                      QApplication::palette().color(QPalette::Text));
   sg->pen.setWidth(2);
   sg->curve->setPen(sg->pen);
+  QwtSymbol symbol = sg->curve->symbol();
+  symbol.setPen(sg->pen);
+  sg->curve->setSymbol(symbol);
+
 
   connect(sg, SIGNAL(remove()), this, SLOT(removeSignal()));
   //connect(sg, SIGNAL(connectionChanged(bool)), SLOT(checkReady()));
@@ -739,7 +744,11 @@ QChartMX::Signal::Signal(QWidget* parent) :
   rem->setToolTip("Remove the signal.");
   val->setToolTip("Current value.");
 
-  curve->setStyle(QwtPlotCurve::Dots);
+  curve->setStyle(QwtPlotCurve::Lines);
+  QwtSymbol symbol = curve->symbol();
+  symbol.setSize(9);
+  symbol.setStyle(QwtSymbol::Ellipse);
+  curve->setSymbol(symbol);
   curve->setPaintAttribute(QwtPlotCurve::PaintFiltered);
   //curve->setPaintAttribute(QwtPlotCurve::ClipPolygons);
 
