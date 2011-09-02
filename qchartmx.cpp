@@ -7,10 +7,12 @@
 #include <QTime>
 
 #include "qchartmx.h"
+#include "ui_qchartmx.h"
 
 #include <qwt_scale_draw.h>
 #include <qwt_scale_engine.h>
 #include <qwt_symbol.h>
+#include <qwt_plot_renderer.h>
 
 
 clargs::clargs(int argc, char *argv[]) :
@@ -368,8 +370,15 @@ void QChartMX::saveResult() {
 void QChartMX::printResult(){
   QPrinter printer;
   QPrintDialog dialog(&printer);
-  if ( dialog.exec() )
-    ui->plot->print(printer);
+  if ( dialog.exec() ) {
+    QwtPlotRenderer renderer;
+    if ( printer.colorMode() == QPrinter::GrayScale ) {
+      renderer.setDiscardFlag(QwtPlotRenderer::DiscardCanvasBackground);
+      renderer.setLayoutFlag(QwtPlotRenderer::FrameWithScales);
+    }
+    renderer.renderTo(ui->plot, printer);
+    //ui->plot->print(printer);
+  }
 }
 
 
@@ -385,8 +394,8 @@ void QChartMX::addSignal(const QString & pvName){
                      QApplication::palette().color(QPalette::Text));
   sg->pen.setWidth(2);
   sg->curve->setPen(sg->pen);
-  QwtSymbol symbol = sg->curve->symbol();
-  symbol.setPen(sg->pen);
+  QwtSymbol * symbol = new QwtSymbol(*sg->curve->symbol());
+  symbol->setPen(sg->pen);
   sg->curve->setSymbol(symbol);
 
 
@@ -444,6 +453,8 @@ int QChartMX::column(Signal * sig) const {
   return -1;
 }
 
+bool QChartMX::isLog() {return ui->logY->isChecked() ;}
+bool QChartMX::isNorm() {return ui->norma->isChecked() ;}
 
 
 void QChartMX::updateTimes() {
@@ -745,12 +756,12 @@ QChartMX::Signal::Signal(QWidget* parent) :
   val->setToolTip("Current value.");
 
   curve->setStyle(QwtPlotCurve::Lines);
-  QwtSymbol symbol = curve->symbol();
-  symbol.setSize(9);
-  symbol.setStyle(QwtSymbol::Ellipse);
+  QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Ellipse);
+  symbol->setSize(9);
   curve->setSymbol(symbol);
-  curve->setPaintAttribute(QwtPlotCurve::PaintFiltered);
+  curve->setPaintAttribute(QwtPlotCurve::CacheSymbols);
   //curve->setPaintAttribute(QwtPlotCurve::ClipPolygons);
+
 
   connect(sig, SIGNAL(editTextChanged(QString)), pv, SLOT(setPV(QString)));
   connect(sig, SIGNAL(editTextChanged(QString)), SLOT(setHeader(QString)));
@@ -796,6 +807,14 @@ double QChartMX::Signal::get() {
     }
   }
 
+  int dataSize = blitz::first(blitz_isnan(data));
+  if (dataSize < 0)
+    dataSize = xData->size();
+  if (dataSize != (int) curve->dataSize())
+    curve->setRawSamples(xData->data(),
+                         normalized ? normal_data.data() : data.data(),
+                         dataSize);
+
   return value;
 
 }
@@ -807,9 +826,8 @@ void QChartMX::Signal::preparePlot(bool norma, bool log) {
   min = blitz::min(data);
   max = blitz::max(data);
   prep();
-  curve->setRawData(xData->data(),
-                    norma ? normal_data.data() : data.data(),
-                    xData->size());
+  curve->setRawSamples(xData->data(),
+                       norma ? normal_data.data() : data.data(), 0);
 }
 
 

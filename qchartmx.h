@@ -14,10 +14,10 @@
 #include <QFile>
 #include <QColor>
 #include <QPen>
+#include <QLabel>
+#include <QTableWidget>
 #include <poptmx.h>
 
-
-#include "ui_qchartmx.h"
 
 #include <qtpv.h>
 #include <qwt_plot_curve.h>
@@ -100,8 +100,9 @@ private:
   QFile dataFile;
   QTextStream dataStr;
 
-  bool isLog() {return ui->logY->isChecked() ;}
-  bool isNorm() {return ui->norma->isChecked() ;}
+  bool isLog();
+  bool isNorm();
+
   double min();
   double max();
 
