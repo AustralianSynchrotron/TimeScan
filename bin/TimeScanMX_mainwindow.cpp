@@ -212,6 +212,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateConfiguration() {
 
+  localSettings.clear();
+
   localSettings.setValue("interval", chart->interval());
   localSettings.setValue("period", chart->period());
   localSettings.setValue("continue", chart->isContinious());
