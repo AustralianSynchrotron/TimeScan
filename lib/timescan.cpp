@@ -519,11 +519,11 @@ void QChartMX::setRanges() {
   if ( ! isAutoMin() )
     m = min();
   else
-    setMin(m);
+    ui->min->setValue(m);
   if ( ! isAutoMax() )
     M = max();
   else
-    setMax(M);
+    ui->max->setValue(M);
 
   if ( m != ui->plot->axisScaleDiv(QwtPlot::yLeft)->lowerBound() ||
        M != ui->plot->axisScaleDiv(QwtPlot::yLeft)->upperBound() )
