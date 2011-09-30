@@ -670,9 +670,9 @@ void QChartMX::getData() {
   if ( ! ui->dataTable->underMouse() )
   ui->dataTable->scrollToBottom();
   ui->dataTable->setItem(table_row, 0,
-                         new QTableWidgetItem(dt.time().toString()));
+                         new QTableWidgetItem(dt.time().toString("hh:mm:ss.zzz")));
 
-  dataStr << point+1 << " " << dt.toString() << " ";
+  dataStr << point+1 << " " << dt.toString("hh:mm:ss.zzz") << " ";
 
   timeData += 1;
   ui->plot->setAxisScale(QwtPlot::xBottom,
