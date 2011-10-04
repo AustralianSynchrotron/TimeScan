@@ -22,7 +22,7 @@ public:
     QwtScaleDraw(),
     baseTime(base), interval(interv) {}
   virtual QwtText label(double v) const {
-    QTime utime = baseTime.addMSecs( (int) 1000*v*interval );
+    QTime utime = baseTime.addMSecs( (int)(1000*v*interval) );
     return utime.toString("hh:mm:ss");
   }
 private:
@@ -94,19 +94,6 @@ QChartMX::QChartMX(QWidget *parent) :
 
   connect(timer, SIGNAL(timeout()), SLOT(getData()));
 
-  connect(ui->saveDir, SIGNAL(textChanged(QString)), SIGNAL(configurationChanged()));
-  connect(ui->saveName, SIGNAL(textChanged(QString)), SIGNAL(configurationChanged()));
-  connect(ui->autoName, SIGNAL(toggled(bool)), SIGNAL(configurationChanged()));
-  connect(ui->showGrid, SIGNAL(toggled(bool)), SIGNAL(configurationChanged()));
-  connect(ui->norma, SIGNAL(toggled(bool)), SIGNAL(configurationChanged()));
-  connect(ui->logY, SIGNAL(toggled(bool)), SIGNAL(configurationChanged()));
-  connect(ui->autoMin, SIGNAL(toggled(bool)), SIGNAL(configurationChanged()));
-  connect(ui->autoMax, SIGNAL(toggled(bool)), SIGNAL(configurationChanged()));
-  connect(ui->min, SIGNAL(editingFinished()), SIGNAL(configurationChanged()));
-  connect(ui->max, SIGNAL(editingFinished()), SIGNAL(configurationChanged()));
-  connect(ui->interval, SIGNAL(editingFinished()), SIGNAL(configurationChanged()));
-  connect(ui->period, SIGNAL(editingFinished()), SIGNAL(configurationChanged()));
-
   setSaveDir(QDir::homePath());
 
   preparePlot();
@@ -116,6 +103,10 @@ QChartMX::QChartMX(QWidget *parent) :
 QChartMX::~QChartMX() {
   delete ui;
   delete timer;
+  blockSignals(true);
+  while ( ! signalsE.isEmpty() )
+    removeSignal(signalsE.at(0)->pv());
+  blockSignals(false);
 }
 
 QString QChartMX::initQti() {
@@ -207,6 +198,7 @@ void QChartMX::setInterval(double val) {
   if ( val*2 > period() )
     setPeriod(2*val);
   preparePlot();
+  emit configurationChanged();
 }
 
 void QChartMX::setPeriod(double val) {
@@ -217,6 +209,7 @@ void QChartMX::setPeriod(double val) {
   if ( interval()*2 > val )
     setInterval(val/2);
   preparePlot();
+  emit configurationChanged();
 }
 
 void QChartMX::setContinious(bool val) {
@@ -231,6 +224,7 @@ void QChartMX::setSaveDir(const QString & val) {
   QFileInfo dirInfo(val);
   bool dirOK = dirInfo.exists() && dirInfo.isWritable();
   ui->saveDir->setStyleSheet( dirOK  ?  goodStyle  :  badStyle );
+  emit configurationChanged();
 }
 
 void QChartMX::setSaveName(const QString & val) {
@@ -242,6 +236,7 @@ void QChartMX::setSaveName(const QString & val) {
   bool fileOK = ! fileInfo.exists() ||
                 ( ! fileInfo.isDir() && fileInfo.isWritable() );
   ui->saveName->setStyleSheet( fileOK  ?  goodStyle  :  badStyle );
+  emit configurationChanged();
 }
 
 void QChartMX::setAutoName(bool val) {
@@ -263,6 +258,8 @@ void QChartMX::setAutoName(bool val) {
       tryName = fn + "_(" + QString::number(count++) + ")" + ext;
     setSaveName(tryName);
   }
+
+  emit configurationChanged();
 
 }
 
@@ -323,6 +320,8 @@ void QChartMX::addSignal(const QString & pvName) {
   sg->curve->attach(ui->plot);
   ui->plot->replot();
 
+  emit configurationChanged();
+
 }
 
 void QChartMX::removeSignal(const QString & pvName) {
@@ -355,6 +354,8 @@ void QChartMX::removeSignal(const QString & pvName) {
 
   ui->plot->replot();
 
+  emit configurationChanged();
+
 }
 
 void QChartMX::saveResult(const QString & resFile) {
@@ -382,10 +383,12 @@ void QChartMX::setGridVisible(bool show){
   else
     grid->detach();
   ui->plot->replot();
+  emit configurationChanged();
 }
 
 void QChartMX::setLogarithmic(bool val) {
   ui->logY->setChecked(val);
+  emit configurationChanged();
 }
 
 void QChartMX::setNormalized(bool norm){
@@ -532,6 +535,8 @@ void QChartMX::setRanges() {
 
   ui->plot->replot();
 
+  emit configurationChanged();
+
 }
 
 
@@ -618,7 +623,7 @@ void QChartMX::startStop(){
     dataStr << "\n";
 
     getData();
-    timer->start((int) 1000*interval());
+    timer->start( (int)(1000*interval()) );
 
   }
 
@@ -627,10 +632,10 @@ void QChartMX::startStop(){
 
 void QChartMX::preparePlot() {
 
-  int points = period() / interval();
+  int points = (int) (period() / interval());
 
   ui->plot->setAxisScaleDraw(QwtPlot::xBottom,
-                             new TimeScaleDraw(QTime::currentTime().addMSecs(-period()*1000),
+                             new TimeScaleDraw(QTime::currentTime().addMSecs((int)(-period()*1000)),
                                                interval()));
   ui->plot->setAxisScale(QwtPlot::xBottom, 0, points);
   ui->plot->setAxisLabelRotation(QwtPlot::xBottom, -50.0);
