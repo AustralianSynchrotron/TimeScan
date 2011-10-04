@@ -329,8 +329,9 @@ void QChartMX::removeSignal(const QString & pvName) {
 
   Signal * sg = 0;
   if (pvName.isEmpty()) {
-    if (signalsE.contains((Signal*)sender()))
-      sg = (Signal *) sender();
+    foreach(Signal * sig, signalsE)
+      if ( sig->rem == sender() )
+        sg = sig;
   } else {
     foreach(Signal * sig, signalsE)
       if (sig->pv() == pvName)
