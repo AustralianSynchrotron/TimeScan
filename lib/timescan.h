@@ -95,6 +95,8 @@ private:
   double dataMin();
   double dataMax();
 
+  static const QStringList knownDetectors;
+  static QStringList initDetectors();
   static const QString qtiCommand;
   static QString initQti();
 

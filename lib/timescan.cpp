@@ -33,6 +33,7 @@ private:
 
 
 const QString QChartMX::qtiCommand = QChartMX::initQti();
+const QStringList QChartMX::knownDetectors = QChartMX::initDetectors();
 const QString QChartMX::badStyle = "background-color: rgba(255, 0, 0, 64);";
 const QString QChartMX::goodStyle = QString();
 
@@ -116,6 +117,20 @@ QString QChartMX::initQti() {
   QString comm = checkQti.readAll();
   comm.chop(1);
   return comm;
+}
+
+QStringList QChartMX::initDetectors() {
+  QFile detFile("/etc/listOfSignals.txt");
+  QStringList ret;
+  if ( detFile.open(QIODevice::ReadOnly | QIODevice::Text) &&
+       detFile.isReadable() )
+    while ( !detFile.atEnd() ) {
+      QString ln = detFile.readLine();
+      if ( ln.at(ln.length()-1) == '\n')
+        ln.chop(1);
+      ret << ln;
+    }
+  return ret;
 }
 
 double QChartMX::interval() const {
@@ -287,6 +302,7 @@ void QChartMX::setAutoMax(bool val) {
 void QChartMX::addSignal(const QString & pvName) {
 
   Signal * sg = new Signal(this);
+  sg->sig->addItems(knownDetectors);
   sg->sig->addItem(pvName);
   sg->sig->setCurrentIndex( sg->sig->findText(pvName) );
 
