@@ -20,7 +20,7 @@ HEADERS  += \
 
 INCLUDEPATH += ../lib
 
-LIBS += -L../lib -lTimeScanMX
+LIBS += -L../lib -lTimeScanMX -lpoptmx
 
 FORMS    += \
     TimeScanMX_mainwindow.ui
