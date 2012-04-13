@@ -150,6 +150,7 @@ private:
   double _min;
   double _max;
   QEpicsPv * _pv;
+  QEpicsPv * _desc;
   Line data;
   Line normal_data;
   const Line * xData; // from the parent
@@ -179,15 +180,24 @@ public:
 
 private slots:
 
+  inline void setPV(const QString & pvname) {
+    _pv->setPV(pvname);
+    _desc->setPV(pvname+".DESC");
+  }
+
   inline void setConnected(bool con) {
     rem->setStyleSheet( con ? "" :
                         "background-color: rgba(255, 0, 0,64);");
     val->setText( con ? "" : "disconnected");
   }
 
-  inline void setHeader(const QString & text) {
-    tableItem->setText(text);
+  inline void setHeader() {
+    QString header = _pv->pv();
+    if (_desc->isConnected())
+      header += '\n' + _desc->get().toString();
+    tableItem->setText(header);
   }
+
 
   inline void updateValue(const QVariant & data) {
     val->setText(data.toString());

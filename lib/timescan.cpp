@@ -736,6 +736,7 @@ QChartMX::Signal::Signal(QChartMX* parent) :
   QObject(parent),
   _min(NAN), _max(NAN),
   _pv(new QEpicsPv(this)),
+  _desc(new QEpicsPv(this)),
   xData( & parent->timeData ),
   normalized(false),
   logscaled(false),
@@ -763,8 +764,9 @@ QChartMX::Signal::Signal(QChartMX* parent) :
   curve->setPaintAttribute(QwtPlotCurve::CacheSymbols);
 
 
-  connect(sig, SIGNAL(editTextChanged(QString)), _pv, SLOT(setPV(QString)));
-  connect(sig, SIGNAL(editTextChanged(QString)), SLOT(setHeader(QString)));
+  connect(sig, SIGNAL(editTextChanged(QString)), SLOT(setPV(QString)));
+  connect(_pv, SIGNAL(pvChanged(QString)), SLOT(setHeader()));
+  connect(_desc, SIGNAL(valueChanged(QVariant)), SLOT(setHeader()));
   connect(_pv, SIGNAL(valueUpdated(QVariant)), SLOT(updateValue(QVariant)));
   connect(_pv, SIGNAL(connectionChanged(bool)), SLOT(setConnected(bool)));
 
