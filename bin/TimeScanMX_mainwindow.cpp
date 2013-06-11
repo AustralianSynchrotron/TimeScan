@@ -199,7 +199,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) :
   connect(chart, SIGNAL(configurationChanged()), SLOT(updateConfiguration()));
 
   if (args.start)
-    QTimer::singleShot(0.5, chart, SLOT(start()));
+    QTimer::singleShot(500, chart, SLOT(start()));
 
 
 }

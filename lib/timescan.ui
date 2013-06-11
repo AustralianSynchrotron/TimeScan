@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1455</width>
-    <height>322</height>
+    <width>1146</width>
+    <height>356</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -149,8 +149,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>365</width>
-            <height>105</height>
+            <width>278</width>
+            <height>111</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -215,6 +215,9 @@
           </layout>
          </widget>
         </widget>
+       </item>
+       <item>
+        <widget class="Script" name="script" native="true"/>
        </item>
        <item>
         <widget class="QPushButton" name="addSignal">
@@ -573,6 +576,12 @@
    <class>QwtPlot</class>
    <extends>QFrame</extends>
    <header>qwt_plot.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Script</class>
+   <extends>QWidget</extends>
+   <header>script.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

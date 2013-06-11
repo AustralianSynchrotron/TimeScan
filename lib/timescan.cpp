@@ -628,6 +628,10 @@ void QChartMX::startStop(){
           << "# PV: \"" << sig->pv() << "\"\n";
     dataStr << "#\n";
 
+    if ( ! ui->script->path().isEmpty() )
+      dataStr
+          << "# Script string: \"" << ui->script->path() << "\"\n\n";
+
     dataStr
         << "# Data columns:\n"
         << "# "
@@ -636,6 +640,9 @@ void QChartMX::startStop(){
     foreach (Signal * sig, signalsE)
       dataStr
           << "%" << sig->pv() << " ";
+    if ( ! ui->script->path().isEmpty() )
+      dataStr
+          << "%Script";
     dataStr << "\n";
 
     getData();
@@ -707,7 +714,15 @@ void QChartMX::getData() {
     ui->dataTable->setItem(table_row, column(sig), item);
     dataStr << value << " ";
   }
+  if ( ! ui->script->path().isEmpty() ) {
+    dataStr << ui->script->execute();
+    qDebug() << "=== Script out (" << point+1 << "):\n" << ui->script->out();
+    qDebug() << "=== Script err (" << point+1 << "):\n" << ui->script->err();
+    qDebug() << "=== End script report (" << point+1 << ").";
+  }
+
   dataStr <<  "\n";
+
 
   setRanges();
   ui->plot->replot();
