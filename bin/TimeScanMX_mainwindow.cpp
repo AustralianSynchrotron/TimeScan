@@ -24,6 +24,7 @@ struct clargs {
   bool norma;
   bool grid;
   bool collapseControl;
+  bool doNotUpdateConfiguration;
 
   poptmx::OptionTable table;
 
@@ -47,6 +48,7 @@ clargs::clargs(int argc, char *argv[]) :
   norma(false),
   grid(false),
   collapseControl(false),
+  doNotUpdateConfiguration(false),
   table("Program to graphically represent time changes of an EPICS PV.")
 {
 
@@ -90,6 +92,8 @@ clargs::clargs(int argc, char *argv[]) :
            "Hide the control panel.",
            "Hide (\"collapse\" in terms of Qt's splitter') the control pannel"
            " leaving only the graph and table pannels visible.")
+      .add(poptmx::OPTION,   &doNotUpdateConfiguration, 'S', "nostore",
+           "Do not store configuration.","")
       .add_standard_options();
 
   if ( ! table.parse(argc,argv) )
@@ -196,7 +200,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) :
 
   }
 
-  connect(chart, SIGNAL(configurationChanged()), SLOT(updateConfiguration()));
+  if ( ! args.doNotUpdateConfiguration )
+    connect(chart, SIGNAL(configurationChanged()), SLOT(updateConfiguration()));
 
   if (args.start)
     QTimer::singleShot(500, chart, SLOT(start()));
