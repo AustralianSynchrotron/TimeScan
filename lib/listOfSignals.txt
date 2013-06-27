@@ -1,0 +1,9 @@
+SR08ID01MOX01:Keithley1:Measure
+SR08ID01MOX01:Keithley1:MeasureInvert
+SR08ID01MOX01:Keithley2:Measure
+SR08ID01MOX01:Keithley2:MeasureInvert
+SR08ID01MOX01:Keithley3:Measure
+SR08ID01MOX01:Keithley3:MeasureInvert
+SR08ID01MOX01:Keithley4:Measure
+SR08ID01MOX01:Keithley4:MeasureInvert
+
