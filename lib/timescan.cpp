@@ -51,13 +51,12 @@ QChartMX::QChartMX(QWidget *parent) :
       << Qt::green
       << Qt::cyan
       << Qt::magenta
-      << Qt::yellow
+      << Qt::darkYellow
       << Qt::darkRed
       << Qt::darkBlue
       << Qt::darkGreen
       << Qt::darkCyan
-      << Qt::darkMagenta
-      << Qt::darkYellow;
+      << Qt::darkMagenta;
   colorsLeft.removeAll(QApplication::palette().color(QPalette::Text));
 
   ui->setupUi(this);
