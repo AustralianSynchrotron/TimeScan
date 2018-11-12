@@ -1,4 +1,4 @@
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "TimeScanMX_mainwindow.h"
 
 int main(int argc, char *argv[])

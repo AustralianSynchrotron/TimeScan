@@ -126,7 +126,11 @@ void Script::evaluate() {
   ui->execute->setStyleSheet("");
 
   fileExec.resize(0);
+  #if QT_VERSION >= 0x050000
+  fileExec.write( ui->path->text().toLatin1() );
+  #else
   fileExec.write( ui->path->text().toAscii() );
+  #endif
   fileExec.flush();
 
   QProcess tempproc;

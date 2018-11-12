@@ -5,6 +5,7 @@
 #include <QDate>
 #include <QPrintDialog>
 #include <QTime>
+#include <math.h>
 
 #include "timescan.h"
 #include "ui_timescan.h"
@@ -68,8 +69,13 @@ QChartMX::QChartMX(QWidget *parent) :
   grid = new QwtPlotGrid;
   grid->enableXMin(true);
   grid->enableYMin(true);
-  grid->setMajPen(Qt::DashLine);
-  grid->setMinPen(Qt::DotLine);
+
+  QPen pen=grid->majorPen();
+  pen.setStyle(Qt::DashLine);
+  grid->setMajorPen(pen);
+  pen=grid->minorPen();
+  pen.setStyle(Qt::DotLine);
+  grid->setMinorPen(pen);
   setGridVisible(isGridVisible());
 
   connect(ui->addSignal, SIGNAL(clicked()), SLOT(addSignal()));
@@ -314,9 +320,8 @@ void QChartMX::addSignal(const QString & pvName) {
   pen.setWidth(2);
   sg->curve->setPen(pen);
 
-  QwtSymbol * symbol = new QwtSymbol(*sg->curve->symbol());
-  symbol->setPen(pen);
-  sg->curve->setSymbol(symbol);
+  QwtSymbol symbol(sg->curve->symbol()->style(), sg->curve->symbol()->brush(), pen, sg->curve->symbol()->size());
+  sg->curve->setSymbol(&symbol);
 
   connect(sg->rem, SIGNAL(clicked()), SLOT(removeSignal()));
 
@@ -509,7 +514,7 @@ void QChartMX::logScale() {
   foreach (Signal * sig, signalsE)
     sig->setLogarithmic(isLogarithmic());
   if ( isLogarithmic() )
-    ui->plot->setAxisScaleEngine(QwtPlot::yLeft, new QwtLog10ScaleEngine);
+    ui->plot->setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine);
   else
     ui->plot->setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
   ui->plot->replot();
@@ -544,8 +549,8 @@ void QChartMX::setRanges() {
   else
     ui->max->setValue(M);
 
-  if ( m != ui->plot->axisScaleDiv(QwtPlot::yLeft)->lowerBound() ||
-       M != ui->plot->axisScaleDiv(QwtPlot::yLeft)->upperBound() )
+  if ( m != ui->plot->axisScaleDiv(QwtPlot::yLeft).lowerBound() ||
+       M != ui->plot->axisScaleDiv(QwtPlot::yLeft).upperBound() )
     ui->plot->setAxisScale(QwtPlot::yLeft, m, M);
 
   ui->plot->replot();
@@ -775,7 +780,7 @@ QChartMX::Signal::Signal(QChartMX* parent) :
   symbol->setSize(9);
   curve->setSymbol(symbol);
   curve->setPaintAttribute(QwtPlotCurve::ClipPolygons);
-  curve->setPaintAttribute(QwtPlotCurve::CacheSymbols);
+  //curve->setPaintAttribute(QwtPlotCurve::CacheSymbols);
 
 
   connect(sig, SIGNAL(editTextChanged(QString)), SLOT(setPV(QString)));
