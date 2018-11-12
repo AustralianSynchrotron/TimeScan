@@ -70,12 +70,18 @@ QChartMX::QChartMX(QWidget *parent) :
   grid->enableXMin(true);
   grid->enableYMin(true);
 
+  #if QWT_VERSION >= 0x060100 
   QPen pen=grid->majorPen();
   pen.setStyle(Qt::DashLine);
   grid->setMajorPen(pen);
   pen=grid->minorPen();
   pen.setStyle(Qt::DotLine);
   grid->setMinorPen(pen);
+  #else
+  grid->setMajPen(Qt::DashLine);
+  grid->setMinPen(Qt::DotLine);
+  #endif
+
   setGridVisible(isGridVisible());
 
   connect(ui->addSignal, SIGNAL(clicked()), SLOT(addSignal()));
@@ -514,7 +520,11 @@ void QChartMX::logScale() {
   foreach (Signal * sig, signalsE)
     sig->setLogarithmic(isLogarithmic());
   if ( isLogarithmic() )
+    #if QWT_VERSION >= 0x060100
     ui->plot->setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine);
+    #else
+    ui->plot->setAxisScaleEngine(QwtPlot::yLeft, new QwtLog10ScaleEngine);
+    #endif
   else
     ui->plot->setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
   ui->plot->replot();
@@ -549,8 +559,13 @@ void QChartMX::setRanges() {
   else
     ui->max->setValue(M);
 
+  #if QWT_VERSION >= 0x060100
   if ( m != ui->plot->axisScaleDiv(QwtPlot::yLeft).lowerBound() ||
        M != ui->plot->axisScaleDiv(QwtPlot::yLeft).upperBound() )
+  #else
+  if ( m != ui->plot->axisScaleDiv(QwtPlot::yLeft)->lowerBound() ||
+       M != ui->plot->axisScaleDiv(QwtPlot::yLeft)->upperBound() )
+  #endif
     ui->plot->setAxisScale(QwtPlot::yLeft, m, M);
 
   ui->plot->replot();
