@@ -70,7 +70,7 @@ QChartMX::QChartMX(QWidget *parent) :
   grid->enableXMin(true);
   grid->enableYMin(true);
 
-  #if QWT_VERSION >= 0x060100 
+  #if QWT_VERSION >= 0x060100
   QPen pen=grid->majorPen();
   pen.setStyle(Qt::DashLine);
   grid->setMajorPen(pen);
@@ -113,12 +113,12 @@ QChartMX::QChartMX(QWidget *parent) :
 }
 
 QChartMX::~QChartMX() {
-  delete ui;
-  delete timer;
   blockSignals(true);
   while ( ! signalsE.isEmpty() )
     removeSignal(signalsE.at(0)->pv());
   blockSignals(false);
+  delete ui;
+  delete timer;
 }
 
 QString QChartMX::initQti() {
@@ -326,8 +326,8 @@ void QChartMX::addSignal(const QString & pvName) {
   pen.setWidth(2);
   sg->curve->setPen(pen);
 
-  QwtSymbol symbol(sg->curve->symbol()->style(), sg->curve->symbol()->brush(), pen, sg->curve->symbol()->size());
-  sg->curve->setSymbol(&symbol);
+  QwtSymbol * symbol = new QwtSymbol(sg->curve->symbol()->style(), sg->curve->symbol()->brush(), pen, sg->curve->symbol()->size());
+  sg->curve->setSymbol(symbol);
 
   connect(sg->rem, SIGNAL(clicked()), SLOT(removeSignal()));
 
@@ -369,13 +369,9 @@ void QChartMX::removeSignal(const QString & pvName) {
 
   if (pen.color() != QApplication::palette().color(QPalette::Text))
     colorsLeft.push_back(pen.color());
-  sg->curve->detach();
   ui->dataTable->removeColumn(column(sg));
   signalsE.removeOne(sg);
-  sg->deleteLater();
-  sg->rem->deleteLater();
-  sg->sig->deleteLater();
-  sg->val->deleteLater();
+  delete sg;
   constructSignalsLayout();
 
   ui->plot->replot();
@@ -808,6 +804,11 @@ QChartMX::Signal::Signal(QChartMX* parent) :
 
 
 QChartMX::Signal::~Signal(){
+  curve->detach();
+  delete curve;
+  rem->deleteLater();
+  sig->deleteLater();
+  val->deleteLater();
 }
 
 
