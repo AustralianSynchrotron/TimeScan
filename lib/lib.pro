@@ -7,6 +7,7 @@ TEMPLATE = lib
 CONFIG += qwt
 QT += printsupport
 
+
 SOURCES += timescan.cpp \
     script.cpp
 

@@ -4,11 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
 
 TARGET = TimeScanMX
 TEMPLATE = app
+QT += core gui widgets
 CONFIG += qwt
+
 
 
 SOURCES +=\
