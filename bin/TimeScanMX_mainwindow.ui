@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="TimeScanMX.qrc">
-    <normaloff>:/new/prefix1/Graph1-small.png</normaloff>:/new/prefix1/Graph1-small.png</iconset>
+    <normaloff>:/new/prefix1/TimeScanIcon.png</normaloff>:/new/prefix1/TimeScanIcon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget"/>
  </widget>

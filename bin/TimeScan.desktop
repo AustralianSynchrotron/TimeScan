@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Time Scan
+Exec=TimeScanMX
+Icon=TimeScanIcon
+Terminal=false
+Categories=Science;X-IMBL;
+StartupNotify=true

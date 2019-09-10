@@ -29,6 +29,13 @@ FORMS    += \
 RESOURCES += \
     TimeScanMX.qrc
 
+icon.path = $$[INSTALLBASE]/share/icons
+icon.files += TimeScanIcon.png
+
+desktop.path = $$[INSTALLBASE]/share/applications
+desktop.files += TimeScan.desktop
+
 target.files = $$[TARGET]
 target.path = $$INSTALLBASE/bin
-INSTALLS += target
+
+INSTALLS += target icon desktop
