@@ -11,10 +11,6 @@ target_include_directories(TimeScanMX
   PRIVATE ../lib
 )
 
-#target_compile_options(TimeScanAS
-#  PRIVATE -DQWT_DLL
-#)
-
 target_link_libraries(TimeScanMX
   qepicstimescan
 )

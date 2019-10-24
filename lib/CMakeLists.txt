@@ -18,11 +18,6 @@ target_link_libraries(qepicstimescan
   ${QWT_LIBRARIES}
 )
 
-#target_compile_options(qepicstimescan
-#  PRIVATE -DQWT_DLL
-#)
-
-
 install(TARGETS qepicstimescan
     LIBRARY DESTINATION lib
 )
