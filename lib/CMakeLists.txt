@@ -26,6 +26,6 @@ install(FILES timescan.h
     DESTINATION include
 )
 
-install(FILES listOfKnownMotorPVs.txt
+install(FILES listOfSignals.txt 
     DESTINATION share
 )
